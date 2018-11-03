@@ -25,6 +25,13 @@ float R5 = 0; //resistance of the flex/bend sensor
 float R6 = 10000; //resistance of the known resistor
 int ledPin = 13;
 
+int analogPinA3 = 3;
+int a3 = 0;
+int Vin3 = 5; //input voltage
+float Vout3 = 0; //converted analog inpt to Arduino
+float R7 = 0; //resistance of the flex/bend sensor
+float R8 = 10000; //resistance of the known resistor
+
 float hunger = 492;
 float thirst = 492; 
 float bathroom = 492; 
@@ -61,7 +68,7 @@ void draw()
   thirst = thirst - 1;
   bathroom = bathroom - 1;
   
-  if (hunger < 1 || thirst < 1 ) { // win condition
+  if (hunger < 1 || thirst < 1 || bathroom < 1 ) { // win condition
     background(0); 
     textSize(48);
     text("YOU LOSE", 10, 100); 
@@ -89,12 +96,14 @@ void draw()
   
   // BATHROOM
   a2 = arduino.analogRead(analogPinA2);
-  if(a2 != 0) {
+  a3 = arduino.analogRead(analogPinA3);
+  if(a2 != 0 && a3 !=0) {
     Vout2 = AnalogInputToVotage(a2, Vin2);
+    Vout3 = AnalogInputToVotage(a3, Vin3);
     R5 = AnalogInputToResistance(a2, Vin2, R6);
-    if (Vout2 < 3.6 && bathroom < 492) {
+    R7 = AnalogInputToResistance(a3, Vin3, R8);
+    if (Vout2 < 3.6 && 492*Vout3/Vin3 > 0 && bathroom < 492) { // If squatting and touching litter box sensor
       bathroom = bathroom + 2;
-      println(492*(1-Vout/Vin));
     }
   }
 }
