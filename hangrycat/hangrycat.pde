@@ -64,14 +64,17 @@ void draw()
   text("bathroom", 10, 400); 
   rect(10, 420, bathroom, 24);
   
-  hunger = hunger - 1; // use this to change how much the meter goes down by
-  thirst = thirst - 1;
-  bathroom = bathroom - 1;
+  int rateMultiplier = millis() / 5000;
+  hunger = hunger - .5 * rateMultiplier * 0.75; // use this to change how much the meter goes down by
+  thirst = thirst - .5 * rateMultiplier *0.25;
+  bathroom = bathroom - .2 * rateMultiplier;
   
   if (hunger < 1 || thirst < 1 || bathroom < 1 ) { // win condition
     background(0); 
     textSize(48);
-    text("YOU LOSE", 10, 100); 
+    text("YOUR CAT IS DEAD", 10, 100); 
+    text("YOUR CAT LIVED FOR \n" + millis() / 1000 + " SECONDS", 10, 140);
+    noLoop();
   }
   
   // HUNGER
@@ -89,7 +92,7 @@ void draw()
   if(a1 != 0) {
     Vout1 = AnalogInputToVotage(a1, Vin1);
     R3 = AnalogInputToResistance(a1, Vin1, R4);
-    if (492*Vout1/Vin1 > 70 && thirst < 492) {
+    if (492*Vout1/Vin1 > 100 && thirst < 492) {
       thirst = thirst + 2;
     }
   }
@@ -103,7 +106,7 @@ void draw()
     R5 = AnalogInputToResistance(a2, Vin2, R6);
     R7 = AnalogInputToResistance(a3, Vin3, R8);
     if (Vout2 < 3.6 && 492*Vout3/Vin3 > 0 && bathroom < 492) { // If squatting and touching litter box sensor
-      bathroom = bathroom + 2;
+      bathroom = bathroom + 10;
     }
   }
 }
